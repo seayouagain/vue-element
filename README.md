@@ -8,8 +8,9 @@
           :defaultProps="{children:'children',label:'label',id:'id'}"
           :treeData="与Element tree要求格式相同的数组"
           :placeholder="请选择"
-          :checkedNodes="result[]"
-          @getCheckedNodes="getCheckedNodes($event)"/>
+          v-model="result[]"
+          :optionExtendStyle="{'max-width':'300px'}"
+         />
 ```
 @getCheckedNodes 回调方法当选择发生变化时会触发
 
