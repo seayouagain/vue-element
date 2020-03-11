@@ -6,9 +6,9 @@
 ```vue
  <SelectTree 
           :defaultProps="{children:'children',label:'label',id:'id'}"
-          :treeData="org.data"
-          :placeholder="$t('m.common.please_search_organization')"
-          :checkedNodes="organization_search"
+          :treeData="与Element tree要求格式相同的数组"
+          :placeholder="请选择"
+          :checkedNodes="result[]"
           @getCheckedNodes="getCheckedNodes($event)"/>
 ```
 @getCheckedNodes 回调方法当选择发生变化时会触发
