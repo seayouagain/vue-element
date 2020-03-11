@@ -2,27 +2,33 @@
   <el-select :value="valueTitleArray" :filter-method="filterMethod" 
     filterable
     multiple
-    collapse-tags 
+    collapse-tags
+   
     :clearable="clearable"
-     :placeholder="placeholder"
+    :placeholder="placeholder"
     @remove-tag="clearHandle"
      @clear="clearHandle">
-    <el-option :value="option_id" :label="option_label" class="options">
-      <el-tree  
-        id="tree-option"
-        ref="selectTree"
-        :style="treeStyle"
-        :accordion="accordion"
-        :data="treeData"
-        :props="defaultProps"
-        show-checkbox
-        node-key="id" 
-        :check-strictly="true"
-        :filter-node-method="filterNode"
-        :default-expanded-keys="defaultExpandedKey"
-         @check-change="checkChange"
-        @node-click="handleNodeClick">
-      </el-tree>
+    <el-option :value="option_id" :label="option_label"   :style="[{'height': 'auto','width': 'auto',
+        'padding': '0',
+        'overflow': 'auto'},optionExtendStyle]">
+      <div class="treeDiv">
+           <el-tree  
+            id="tree-option"
+            ref="selectTree"
+            :style="treeStyle"
+            :accordion="accordion"
+            :data="treeData"
+            :props="defaultProps"
+            show-checkbox
+            node-key="id" 
+            :check-strictly="true"
+            :filter-node-method="filterNode"
+            :default-expanded-keys="defaultExpandedKey"
+            @check-change="checkChange"
+            @node-click="handleNodeClick">
+          </el-tree>   
+      </div>
+          
     </el-option>
   </el-select>
 </template>
@@ -46,12 +52,24 @@ export default {
     clearable:{ type:Boolean, default: true },
     // 自动收起
     accordion:{ type:Boolean, default: false },
+    //可配置tree的Style
     treeStyle:{
         type:Object,
         default(){
-          return {"max-height":"200px"}
+          return {}
+        }
+    },
+    
+    //options 扩展配置
+    optionExtendStyle:{
+      type:Object,
+      default(){
+        return {
+          'max-height':'200px' ,
+          'max-width': '250px'
         }
       }
+    }  
   },
   data() {
     return {
@@ -72,7 +90,11 @@ export default {
       this.checkedNodes = []
       let nodes = this.$refs.selectTree.getCheckedNodes();
       nodes.forEach(element=>{
-        this.valueTitleArray.push(element.label)
+         let label = element.label
+        if(label.length>8){
+          label = label.slice(0,5)+"..."
+        }
+        this.valueTitleArray.push(label)
         this.checkedNodes.push(element)
       })
       this.checkedNodesChange()
@@ -83,7 +105,11 @@ export default {
       this.checkedNodes = []
       let nodes = this.$refs.selectTree.getCheckedNodes();
       nodes.forEach(element=>{
-        this.valueTitleArray.push(element.label)
+        let label = element.label
+        if(label.length>8){
+          label = label.slice(0,5)+"..."
+        }
+        this.valueTitleArray.push(label)
         this.checkedNodes.push(element)
       })
       this.checkedNodesChange()
@@ -131,23 +157,26 @@ export default {
 </script>
 
 <style scoped>
-  .el-scrollbar .el-scrollbar__view .el-select-dropdown__item{
-    height: auto;
-    max-height: 274px;
+   /* .el-scrollbar .el-scrollbar__view .el-select-dropdown__item{
+    height: auto;  
+    width: auto;
+    max-height: 150px;
+    max-width: 200px; 
     padding: 0;
-    overflow: auto;
-    overflow-y: auto;
-  }
+    overflow: auto; 
+  
+  } */
+
   .el-select-dropdown__item.selected{
     font-weight: normal;
   }
-  ul li >>>.el-tree .el-tree-node__content{
+ ul li >>>.el-tree .el-tree-node__content{
     height:auto;
     padding: 0 20px;
-  }
-  .el-tree-node__label{
+  } 
+ /* .el-tree-node__label{
     font-weight: normal;
-  }
+  } */
   .el-tree >>>.is-current .el-tree-node__label{
     color: #409EFF;
     font-weight: 700;
@@ -155,5 +184,18 @@ export default {
   .el-tree >>>.is-current .el-tree-node__children .el-tree-node__label{
     color:#606266;
     font-weight: normal;
-  }
+  } 
+ .treeDiv{
+    /* overflow-x: auto; */
+    /* overflow-y: auto; */
+    height: 100%;
+    width: 100%;
+    background-color: #ffffff;
+   }
+.el-tree{
+  min-width: 100%;  
+  font-size: 14px;  
+  display: inline-block !important;  
+}
+
 </style>
