@@ -25,34 +25,35 @@
                 :overridingStyles="transferData.overridingStyles"
                 :tableColumnKeyName="transferData.tableColumnKeyName"
                 tableHeight="280px"></transfer-table>
-                
+                    
 ```
-```json
- transferData:{
-         height:'300px',
-         tableMaxHeight:'250px',
-         tableMaxWidth:'',
-         tableSize:'mini',
-         overflow:'auto',
-         defaultSort:{prop: 'name', order: 'descending'},
-         overridingStyles:{'margin-left': '-87px','margin-right': '-7px'},
-         tableColumnKeyName:'id',
-         options:{
-          source:{
-            title:'待选择',
-            data:[],//数据
-            likeParam:undefined,
-            searchCallBack:this.handleSearch,
-            column:[{prop:'name','姓名'},{prop:'age',label:'年龄'}],
-          },
-          target:{
-            title:'已选择',
-            data:[],
-            column:[{prop:'name','姓名'},{prop:'age',label:'年龄'}]
-          }
-         }
-        
-      }
-```
+数据格式例子如下
+```javascript
+transferData:{
+​         height:'300px',
+​         tableMaxHeight:'250px',
+​         tableMaxWidth:'',
+​         tableSize:'mini',
+​         overflow:'auto',
+​         defaultSort:{prop: 'name', order: 'descending'},
+​         overridingStyles:{'margin-left': '-87px','margin-right': '-7px'},
+​         tableColumnKeyName:'id',
+​         options:{
+​          source:{
+​            title:'待选择',
+​            data:[],//数据
+​            likeParam:undefined,
+​            searchCallBack:this.handleSearch,
+​            column:[{prop:'name','姓名'},{prop:'age',label:'年龄'}],
+​          },
+​          target:{
+​            title:'已选择',
+​            data:[],
+​            column:[{prop:'name','姓名'},{prop:'age',label:'年龄'}]
+​          }
+​         }
+​        
 
+      }      
+```
 
