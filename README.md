@@ -6,13 +6,14 @@
 ```vue
  <SelectTree 
           :defaultProps="{children:'children',label:'label',id:'id'}"
-          :treeData="与Element tree要求格式相同的数组"
-          :placeholder="请选择"
-          v-model="result[]"
+          :treeData="与Element tree格式相同法人数组"
+          :placeholder="请选择数据"
+          v-model="数组格式"
+          :multiple="Boolean 多选或者单选 默认多选"
+          @node-change="选择数据变化时回调"
           :optionExtendStyle="{'max-width':'300px'}"
-         />
+          />
 ```
-@getCheckedNodes 回调方法当选择发生变化时会触发
 
 ##### 2.TransferTable
 简单实现的可穿梭的表格.
@@ -24,6 +25,34 @@
                 :overridingStyles="transferData.overridingStyles"
                 :tableColumnKeyName="transferData.tableColumnKeyName"
                 tableHeight="280px"></transfer-table>
+                
+```
+```json
+ transferData:{
+         height:'300px',
+         tableMaxHeight:'250px',
+         tableMaxWidth:'',
+         tableSize:'mini',
+         overflow:'auto',
+         defaultSort:{prop: 'name', order: 'descending'},
+         overridingStyles:{'margin-left': '-87px','margin-right': '-7px'},
+         tableColumnKeyName:'id',
+         options:{
+          source:{
+            title:'待选择',
+            data:[],//数据
+            likeParam:undefined,
+            searchCallBack:this.handleSearch,
+            column:[{prop:'name','姓名'},{prop:'age',label:'年龄'}],
+          },
+          target:{
+            title:'已选择',
+            data:[],
+            column:[{prop:'name','姓名'},{prop:'age',label:'年龄'}]
+          }
+         }
+        
+      }
 ```
 
 

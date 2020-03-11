@@ -1,8 +1,8 @@
 <template>
-  <el-select :value="valueTitleArray" :filter-method="filterMethod" 
+  <el-select  v-model="selectTitle" :filter-method="filterMethod" 
     filterable
-    multiple
-    collapse-tags
+    :multiple="multiple"
+    :collapse-tags="multiple"
     :disabled="disabled"
     :clearable="clearable"
     :placeholder="placeholder"
@@ -19,7 +19,7 @@
             :accordion="accordion"
             :data="treeData"
             :props="defaultProps"
-            :show-checkbox="showCheckBox"
+            :show-checkbox="multiple"
              node-key="id" 
             :check-strictly="true"
             :filter-node-method="filterNode"
@@ -46,6 +46,7 @@ export default {
     },
     //select组件 disabled
     disabled:{ type:Boolean, default: false },
+    //placeholder
     placeholder:{type:String, default: "请选择"},
     // 选项列表数据(树形结构的对象数组)
     treeData:{ type: Array, default: [] },
@@ -53,8 +54,8 @@ export default {
     clearable:{ type:Boolean, default: true },
     // 自动收起
     accordion:{ type:Boolean, default: false },
-    // tree 选择模式checkbox
-    showCheckBox:{type:Boolean, default: true},
+    // tree 是否为多选模式
+    multiple:{type:Boolean, default: true},
     //可配置tree的Style
     treeStyle:{
         type:Object,
@@ -63,7 +64,7 @@ export default {
         }
     },
     //监听v-model
-    value:{type:Array},
+    value:{type:Array,default:[]},
     //options 扩展配置
     optionExtendStyle:{
       type:Object,
@@ -76,72 +77,55 @@ export default {
   },
   data() {
     return {
-      checkedNodes:[],
-      valueTitleArray:[],
+      checkedNodes:this.value,
       defaultExpandedKey:[],
       option_id:"",
       option_label:""
     }
   },
+  beforeMount(){
+  },
+  beforeDestroy(){
+
+  },
+  destroyed(){
+  },
   mounted(){
-    this.initCheckNode();
   },
 
-  methods: {
-    initCheckNode(){
-      if (this.value!=null && this.value.length>0){
-        this.checkedNodes = this.value
-      }
-    },
+  methods: {  
     handleNodeClick(item, node, self){
       if(this.showCheckBox){
         //多选
-        this.valueTitleArray = []
         this.checkedNodes = []
         let nodes = this.$refs.selectTree.getCheckedNodes();
         nodes.forEach(element=>{
-          let label = element.label
-          if(label.length>8){
-            label = label.slice(0,5)+"..."
-          }
-          this.valueTitleArray.push(label)
           this.checkedNodes.push(element)
         })
       }else{
         //单选
-        this.valueTitleArray = []
         this.checkedNodes = []
-        let label = node.label
-        if(label.length>8){
-          label = label.slice(0,5)+"..."
-        }
-        this.valueTitleArray.push(label)
-        this.checkedNodes.push(node)
+        this.checkedNodes.push(item)
       }
+      this.eventChange()
     },
 
     checkChange(item, node, self) {
-      
       this.valueTitleArray = []
       this.checkedNodes = []
       let nodes = this.$refs.selectTree.getCheckedNodes();
       nodes.forEach(element=>{
-        let label = element.label
-        if(label.length>8){
-          label = label.slice(0,5)+"..."
-        }
-        this.valueTitleArray.push(label)
         this.checkedNodes.push(element)
       })
+      this.eventChange()
     },
     // 清除选中
     clearHandle(){
-      if(this.valueTitleArray){
-        this.valueTitleArray.pop()
+      if(this.checkedNodes&&this.checkedNodes.length>0){
         this.checkedNodes.pop()
       }
       this.$refs.selectTree.setCheckedNodes(this.checkedNodes)
-
+      this.eventChange()
     },
   
     filterMethod(val){
@@ -151,6 +135,12 @@ export default {
     filterNode(value, data) {
         if (!value) return true;
         return data.label.indexOf(value) !== -1;
+    },
+    
+   eventChange(){
+      this.$emit('input',this.checkedNodes)
+      //node-change事件
+      this.$emit('node-change',this.checkedNodes)
     }
   },
   watch: {
@@ -162,17 +152,43 @@ export default {
         }
       }
     },
-    value(newVal) {
+    value(newVal,oldVal) {
       this.checkedNodes = newVal
-    },
-
-    checkedNodes(newVal){
-       this.$emit('input',this.checkedNodes)
     }
-
   },
   computed:{
-
+    selectTitle:{
+      // getter
+      get: function () {
+        let result = undefined
+        if(this.checkedNodes&&this.checkedNodes.length>0){
+          result = []
+          if(this.multiple){
+            this.checkedNodes.forEach(element=>{
+              let label = element.label
+              if(label.length>8){
+                label = label.slice(0,5)+"..."
+              }
+              result.push(label)
+            })
+          }else{
+              let label = this.checkedNodes[0].label
+              if(label.length>8){
+                label = label.slice(0,5)+"..."
+              }
+              result = label
+          }
+        }else{
+          result = undefined
+        }
+        
+        return result
+      },
+      // setter
+      set: function (newValue) {
+      }
+     
+    }
   }
   
 }
